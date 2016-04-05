@@ -16,7 +16,8 @@ import shapely.geometry
 hostname_app_root_mapping = {
     "PC9074HFKY1": "W:\\workspace\\demo-eau",
     "hd-demo-w1": "/home/casd/demo-eau",
-    "HP1040-1": "C:\\Users\\Utilisateur\\Dropbox\\Dev\\workspace\\demo-eau"
+    "HP1040-1": "C:\\Users\\Utilisateur\\Dropbox\\Dev\\workspace\\demo-eau",
+    "vps262755.ovh.net": "/home/alex/workspace/demo-eau"
 }
 
 APP_ROOT = hostname_app_root_mapping.get(socket.gethostname(),
@@ -30,6 +31,10 @@ data_info = {
             "orient": "records"},
         "conso_sectors": {
             "filename": "conso-sectors-10m10d.json",
+            "format": "json",
+            "orient": "split"},
+        "conso_sectors_perturbated": {
+            "filename": "conso-sectors-p71-10m10d.json",
             "format": "json",
             "orient": "split"},
         "geo_sectors_patches": {
@@ -157,7 +162,7 @@ def load_conso_data(data_file):
     df["date"] = pd.to_datetime(df["date"])
     return df
 
-def load_conso_sectors():
-    df = dataloader.load("conso_sectors")
+def load_conso_sectors(data_file="conso_sectors_perturbed"):
+    df = dataloader.load(data_file)
     df = df.set_index(["sector_id", "date"]).sort_index()
     return df

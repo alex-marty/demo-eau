@@ -45,3 +45,13 @@ def add_saturation(series, value, start=None, end=None):
     new_series = series.copy(deep=True)
     new_series[start:end] = value
     return new_series
+
+def add_sector_perturbation(conso_sectors, sector_id, slot_value, scale_value,
+                            start=None, end=None):
+    sector_conso = conso_sectors.loc[sector_id, :]
+    sector_conso["p_trend"] = add_slot_and_scaling(
+        sector_conso["trend"], slot_value, scale_value, start, end)
+    sector_conso["p_real"] = sector_conso["p_trend"] + sector_conso["noise"]
+    new_conso_sectors = conso_sectors.copy()
+    new_conso_sectors.loc[sector_id, "real"].update(sector_conso["p_real"])
+    return new_conso_sectors
